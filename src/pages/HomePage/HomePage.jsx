@@ -17,15 +17,28 @@ import { faCircleInfo, faPlay } from '@fortawesome/free-solid-svg-icons';
 import MovieSection from '../../components/MovieSection/MovieSection';
 import { Button } from '../../components';
 import MovieDetail from '../../components/MovieDetail/MovieDetail';
+import YouTube from 'react-youtube';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTrailer } from '../../redux/index';
 
 const HomePage = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [movies, setMovies] = useState();
-  // eslint-disable-next-line no-unused-vars
-  const [top10, setTop10] = useState();
-  const [popular, setPopular] = useState();
-  const [upcoming, setUpcoming] = useState();
+  const [trailerVideo, setTrailerVideo] = useState();
+  const [open, setOpen] = useState(false);
+  const [play, setPlay] = useState(false);
+  const [player, setPlayer] = useState();
+  const [buttonClick, setClick] = useState(true);
   const { fetchTopRated, fetchPopular, fetchUpcoming } = fetchData;
+  const trailer = useSelector((state) => state.trailer);
+  const dispatch = useDispatch();
+
+  const [opts] = useState({
+    playerVars: {
+      controls: 0,
+      autoplay: 0,
+      end: 20,
+      modestbranding: 1
+    }
+  });
 
   const navItems = [
     {
@@ -50,82 +63,113 @@ const HomePage = () => {
     }
   ];
 
+  const playTrailer = () => {
+    setPlay(true);
+    if (buttonClick && player) {
+      player.playVideo();
+      document.getElementById('trailer-title').classList.add('scaleDownTitle');
+      document.getElementById('trailer-description').classList.add('scaleDownDescription');
+      setClick((prev) => !prev);
+    } else {
+      player.pauseVideo();
+      setClick((prev) => !prev);
+    }
+  };
+
+  const renderTrailer = () => {
+    const trailer = trailerVideo.results[0];
+    if (trailer) {
+      return (
+        <YouTube
+          videoId={trailer.key}
+          id={'trailer-ytb'}
+          title={'Aloasdasd'}
+          opts={opts}
+          onReady={(event) => setPlayer(event.target)}
+          onEnd={(event) => {
+            console.log(event);
+            event.target.seekTo(0);
+            event.target.pauseVideo();
+            setClick(true);
+            setPlay(false);
+            document.getElementById('trailer-title').classList.remove('scaleDownTitle');
+            document.getElementById('trailer-description').classList.remove('scaleDownDescription');
+          }}
+        />
+      );
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/movie/550`, {
-        params: {
-          api_key: process.env.REACT_APP_TMDB_KEY
-        }
-      })
-      .then((res) => {
-        setMovies(res.data);
-      })
-      .catch((err) => console.log(err));
+    const randomTrailer = Math.floor((Math.random() + 100) * 100);
 
-    axios
-      .get(fetchTopRated, {
-        params: {
-          page: 1
-        }
-      })
-      .then((res) => {
-        setTop10(res.data.results);
-      })
-      .catch((err) => console.log(err));
+    const fetchTrailer = async () => {
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/movie/${randomTrailer}`, {
+          params: {
+            api_key: process.env.REACT_APP_TMDB_KEY
+          }
+        });
+        dispatch(setTrailer(res.data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-    axios
-      .get(fetchPopular, {
-        params: {
-          page: 1
-        }
-      })
-      .then((res) => {
-        setPopular(res.data.results);
-      })
-      .catch((err) => console.log(err));
-
-    axios
-      .get(fetchUpcoming, {
-        params: {
-          page: 1
-        }
-      })
-      .then((res) => {
-        setUpcoming(res.data.results);
-      })
-      .catch((err) => console.log(err));
+    const fetchVideos = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/movie/${randomTrailer}/videos`,
+          {
+            params: {
+              api_key: process.env.REACT_APP_TMDB_KEY,
+              append_to_response: 'videos'
+            }
+          }
+        );
+        setTrailerVideo(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchTrailer();
+    fetchVideos();
   }, []);
 
   return (
     <Wrapper>
+      {open && <MovieDetail open={open} setOpen={setOpen} />}
       <div>
         <Navbar navItems={navItems} />
       </div>
-      <Trailer>
-        <img src={`${base_img_url}${movies?.backdrop_path}`} />
+      <Trailer play={play}>
+        <img src={`${base_img_url}${trailer?.backdrop_path}`} />
         <div className="img-overlay"></div>
-
+        {trailerVideo && renderTrailer()}
         <TrailerOverlay />
         <TrailerContent>
-          <Title>{movies?.title}</Title>
-          <Description>{movies?.overview}</Description>
+          <Title id="trailer-title">{trailer?.title}</Title>
+          <Description id="trailer-description">{trailer?.overview}</Description>
           <TrailerAction>
-            <Button>
+            <Button onClick={playTrailer}>
               <FontAwesomeIcon icon={faPlay} /> Play
             </Button>
             <Button>
               <FontAwesomeIcon icon={faCircleInfo} />
-              More Info
+              <span>More Info</span>
             </Button>
           </TrailerAction>
         </TrailerContent>
       </Trailer>
       <MovieListContainer>
-        <MovieSection title={'Trending Now'} movies={top10} />
-        <MovieSection title={'Exciting TV Action & Adventure'} movies={popular} />
-        <MovieSection title={'Upcoming'} movies={upcoming} />
+        <MovieSection title={'Trending Now'} method={fetchPopular} setOpen={setOpen} />
+        <MovieSection
+          title={'Exciting TV Action & Adventure'}
+          method={fetchTopRated}
+          setOpen={setOpen}
+        />
+        <MovieSection title={'Upcoming'} method={fetchUpcoming} setOpen={setOpen} />
       </MovieListContainer>
-      <MovieDetail />
     </Wrapper>
   );
 };

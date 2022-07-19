@@ -59,7 +59,6 @@ const WelcomePage = () => {
   };
 
   const handleShowAnswer = (index) => {
-    console.log(questionRefs[index].current.classList.contains('show'));
     if (questionRefs[index].current.classList.contains('show')) {
       questionRefs[index].current.classList.remove('show');
       questionRefs[index].current.classList.add('close');
@@ -114,7 +113,6 @@ const WelcomePage = () => {
                   }}
                   onClick={() => {
                     setAnimate(true);
-                    console.log('ref', emailRef.current);
                   }}
                 />
                 <label htmlFor="emailTop">Email address</label>

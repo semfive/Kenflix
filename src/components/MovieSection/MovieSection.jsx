@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { createRef, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   SliderContainer,
   SliderItem,
@@ -12,10 +11,16 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { base_img_url } from '../../api/request';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setMovie } from '../../redux/movie/movieSlice';
+import { addVideos } from '../../redux/videos/videosSlice';
 
-const MovieSection = ({ title, movies, setTop, setLeft }) => {
+const MovieSection = ({ title, setOpen, method }) => {
   const sliderRef = useRef();
   const sliderContainerRef = useRef(0);
+
+  const [movies, setMovies] = useState();
   const [sliderWidth, setSliderWidth] = useState(0);
   const [totalInViewport, setTotalInViewport] = useState(0);
   const [distance, setDistance] = useState(0);
@@ -23,36 +28,70 @@ const MovieSection = ({ title, movies, setTop, setLeft }) => {
   const [hasPrev, setHasPrev] = useState(false);
   const [hasNext, setHasNext] = useState(true);
 
+  const dispatch = useDispatch();
+
   const handlePrev = () => {
     setViewed(viewed - totalInViewport);
     setDistance(distance + sliderWidth);
-    console.log(totalInViewport);
-    console.log(viewed);
   };
 
   const handleNext = () => {
     setViewed(viewed + totalInViewport);
     setDistance(distance - sliderWidth);
-    console.log(sliderRef.current.clientWidth);
   };
 
   const slideProps = {
     transform: `translate3d(${distance}px, 0, 0)`
   };
 
-  const showDetail = (event) => {
-    // console.log(event.target);
+  const showDetail = async (id) => {
+    const detailRes = await axios.get(
+      `${process.env.REACT_APP_BASE_URL}/movie/${id}?api_key=${process.env.REACT_APP_TMDB_KEY}`
+    );
+    dispatch(setMovie(detailRes.data));
+    const videoRes = await axios.get(
+      `${process.env.REACT_APP_BASE_URL}/movie/${detailRes.data.id}/videos`,
+      {
+        params: {
+          api_key: process.env.REACT_APP_TMDB_KEY,
+          append_to_response: 'videos'
+        }
+      }
+    );
+    dispatch(addVideos(videoRes.data.results));
+    setOpen(true);
   };
 
   useEffect(() => {
-    const containerWidth =
-      sliderRef.current.clientWidth + (sliderRef.current.clientWidth * 0.12) / 3;
+    let containerWidth;
+    if (screen.width <= 768) {
+      containerWidth = sliderRef.current.clientWidth + sliderRef.current.clientWidth * 0.05;
+    } else {
+      containerWidth = sliderRef.current.clientWidth + (sliderRef.current.clientWidth * 0.12) / 3;
+    }
 
     setSliderWidth(containerWidth);
     setTotalInViewport(Math.floor(containerWidth / sliderRef.current.clientWidth));
     setHasPrev(distance < 0);
     setHasNext(viewed + totalInViewport < 5);
   }, [sliderContainerRef, distance]);
+  // console.log(method);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const res = await axios.get(method, {
+          params: {
+            page: 1
+          }
+        });
+        setMovies(res.data.results);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchMovies();
+  }, []);
 
   return (
     <Wrapper>
@@ -65,9 +104,9 @@ const MovieSection = ({ title, movies, setTop, setLeft }) => {
         )}
 
         <SliderWrapper ref={sliderRef} style={slideProps}>
-          {movies?.map((item, index) => (
+          {movies?.map((item) => (
             <>
-              <SliderItem key={item.id} onMouseEnter={showDetail}>
+              <SliderItem key={item.id} onClick={() => showDetail(item.id)}>
                 <img src={`${base_img_url}${item.backdrop_path}`} />
               </SliderItem>
             </>

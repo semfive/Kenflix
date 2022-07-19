@@ -57,6 +57,10 @@ export const SliderItem = styled.div`
     z-index: 999;
   }
 
+  @media (max-width: 768px) {
+    width: 30%;
+  }
+
   :hover ~ & {
     transform: translateX(12%);
   }
@@ -70,6 +74,10 @@ export const SliderWrapper = styled.div`
   transform: translate3d(0, 0, 0);
   transition: transform 2s ease;
   gap: calc(12% / 3);
+
+  @media (max-width: 768px) {
+    gap: calc(10% / 2);
+  }
 `;
 
 export const SliderMask = styled.div`

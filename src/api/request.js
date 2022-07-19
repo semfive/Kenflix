@@ -7,5 +7,6 @@ export const fetchData = {
   fetchLatest: `${BASE_URL}/movie/latest?api_key=${API_KEY}`,
   fetchPopular: `${BASE_URL}/movie/popular?api_key=${API_KEY}`,
   fetchTopRated: `${BASE_URL}/movie/top_rated?api_key=${API_KEY}`,
-  fetchUpcoming: `${BASE_URL}/movie/upcoming?api_key=${API_KEY}`
+  fetchUpcoming: `${BASE_URL}/movie/upcoming?api_key=${API_KEY}`,
+  fetchNowPlaying: `${BASE_URL}/movie/now_playing?api_key=${API_KEY}`
 };

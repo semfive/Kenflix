@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Author, NavItem, NavLeft, NavList, NavRight, Wrapper } from './Navbar.style';
 import logo from '../../assets/images/logo.png';
 import avatar from '../../assets/images/avatar.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import Button from '../Button/Button';
+import axios from 'axios';
 import { useAuth } from '../../hooks';
 
 const Navbar = ({ navItems, button }) => {
   const [navBG, setNavBG] = useState(false);
+  const [openBox, setOpenBox] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [search, setSearch] = useState('');
+
+  const searchRef = useRef();
+
   const { token } = useAuth();
 
   const changeBackground = () => {
@@ -19,6 +26,26 @@ const Navbar = ({ navItems, button }) => {
     }
   };
   window.addEventListener('scroll', changeBackground);
+
+  const showSearchBox = (e) => {
+    e.stopPropagation();
+    searchRef.current.focus();
+    setOpenBox(!openBox);
+  };
+
+  const handleSubmit = async (e) => {
+    if (e.code === 'Enter') {
+      const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/search/movie`, {
+        params: {
+          api_key: process.env.REACT_APP_TMDB_KEY,
+          query: search
+        }
+      });
+
+      console.log(res);
+    }
+  };
+
   return (
     <Wrapper navBG={navBG}>
       <NavRight>
@@ -26,20 +53,35 @@ const Navbar = ({ navItems, button }) => {
           <img src={logo} alt="site logo" />
         </div>
         {token && (
-          <NavList>
-            {navItems?.map((navItem) => (
-              <NavItem key={navItem.name}>{navItem.name}</NavItem>
-            ))}
-          </NavList>
+          <>
+            <div id="nav-dropdown">
+              <span id="nav-dropdown-btn">Browser</span>
+
+              <NavList>
+                <div className="arrow"></div>
+                {navItems?.map((navItem) => (
+                  <NavItem key={navItem.name}>{navItem.name}</NavItem>
+                ))}
+              </NavList>
+            </div>
+          </>
         )}
       </NavRight>
-      <NavLeft>
+      <NavLeft openBox={openBox}>
         {token && (
           <>
-            <div>
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
+            <div id="search-icon">
+              <FontAwesomeIcon icon={faMagnifyingGlass} onClick={(e) => showSearchBox(e)} />
+              <input
+                ref={searchRef}
+                id="search-box"
+                placeholder="Title, people, genres"
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => handleSubmit(e)}
+              />
             </div>
-            <div>
+
+            <div id="notification">
               <FontAwesomeIcon icon={faBell} />
             </div>
             <Author>
