@@ -7,6 +7,7 @@ import { faBell, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import Button from '../Button/Button';
 import axios from 'axios';
 import { useAuth } from '../../hooks';
+import { API_KEY, BASE_URL } from '../../api/request';
 
 const Navbar = ({ navItems, button }) => {
   const [navBG, setNavBG] = useState(false);
@@ -35,9 +36,9 @@ const Navbar = ({ navItems, button }) => {
 
   const handleSubmit = async (e) => {
     if (e.code === 'Enter') {
-      const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/search/movie`, {
+      const res = await axios.get(`${BASE_URL}/search/movie`, {
         params: {
-          api_key: process.env.REACT_APP_TMDB_KEY,
+          api_key: API_KEY,
           query: search
         }
       });
