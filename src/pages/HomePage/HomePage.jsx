@@ -11,7 +11,7 @@ import {
   TrailerOverlay,
   Wrapper
 } from './HomePage.style';
-import { base_img_url, fetchData } from '../../api/request';
+import { API_KEY, base_img_url, BASE_URL, fetchData } from '../../api/request';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo, faPlay } from '@fortawesome/free-solid-svg-icons';
 import MovieSection from '../../components/MovieSection/MovieSection';
@@ -105,9 +105,9 @@ const HomePage = () => {
 
     const fetchTrailer = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/movie/${randomTrailer}`, {
+        const res = await axios.get(`${BASE_URL}/movie/${randomTrailer}`, {
           params: {
-            api_key: process.env.REACT_APP_TMDB_KEY
+            api_key: API_KEY
           }
         });
         dispatch(setTrailer(res.data));
@@ -118,15 +118,12 @@ const HomePage = () => {
 
     const fetchVideos = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/movie/${randomTrailer}/videos`,
-          {
-            params: {
-              api_key: process.env.REACT_APP_TMDB_KEY,
-              append_to_response: 'videos'
-            }
+        const res = await axios.get(`${BASE_URL}/movie/${randomTrailer}/videos`, {
+          params: {
+            api_key: API_KEY,
+            append_to_response: 'videos'
           }
-        );
+        });
         setTrailerVideo(res.data);
       } catch (error) {
         console.log(error);

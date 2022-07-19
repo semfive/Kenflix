@@ -10,11 +10,11 @@ import {
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import { base_img_url } from '../../api/request';
+import { API_KEY, base_img_url, BASE_URL } from '../../api/request';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setMovie } from '../../redux/movie/movieSlice';
-import { addVideos } from '../../redux/videos/videosSlice';
+import { addVideos } from '../../redux';
 
 const MovieSection = ({ title, setOpen, method }) => {
   const sliderRef = useRef();
@@ -45,19 +45,14 @@ const MovieSection = ({ title, setOpen, method }) => {
   };
 
   const showDetail = async (id) => {
-    const detailRes = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/movie/${id}?api_key=${process.env.REACT_APP_TMDB_KEY}`
-    );
+    const detailRes = await axios.get(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`);
     dispatch(setMovie(detailRes.data));
-    const videoRes = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/movie/${detailRes.data.id}/videos`,
-      {
-        params: {
-          api_key: process.env.REACT_APP_TMDB_KEY,
-          append_to_response: 'videos'
-        }
+    const videoRes = await axios.get(`${BASE_URL}/movie/${detailRes.data.id}/videos`, {
+      params: {
+        api_key: API_KEY,
+        append_to_response: 'videos'
       }
-    );
+    });
     dispatch(addVideos(videoRes.data.results));
     setOpen(true);
   };
