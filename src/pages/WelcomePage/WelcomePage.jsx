@@ -69,7 +69,7 @@ const WelcomePage = () => {
   };
 
   const handleSignUp = () => {
-    setTimeout(setLoading(true), 3000);
+    setLoading(true);
     if (email !== '' && error === '') {
       navigate('/signup');
       setLoading(false);

@@ -37,7 +37,7 @@ const SignUp = () => {
     setLoading(false);
     setToken(user.accessToken);
     localStorage.setItem('token', user.accessToken);
-    navigate('/homepage');
+    navigate('/accounts');
   };
 
   return (

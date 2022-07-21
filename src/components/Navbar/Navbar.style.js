@@ -79,7 +79,22 @@ export const NavRight = styled.div`
     &:hover {
       ul {
         opacity: 1;
+        display: flex;
       }
+      .arrow {
+        opacity: 1;
+      }
+    }
+
+    .arrow {
+      border: 7px solid transparent;
+      border-bottom-color: ${COLOR.white[0]};
+      height: 0;
+      opacity: 0;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      z-index: 100;
     }
   }
   #nav-dropdown-btn {
@@ -110,21 +125,12 @@ export const NavList = styled.ul`
     border-top: 1px solid ${COLOR.white[0]};
     align-items: center;
     position: absolute;
-    top: calc(100% + 30%);
+    top: 140%;
     left: -50%;
+    display: none;
     li {
       /* padding: 5px 10px; */
       word-break: keep-all;
-    }
-    .arrow {
-      border: 7px solid transparent;
-      border-bottom-color: ${COLOR.white[0]};
-      height: 0;
-      position: absolute;
-      top: -14px;
-      left: 50%;
-      margin-left: -7px;
-      z-index: 100;
     }
   }
 `;
@@ -169,10 +175,118 @@ export const NavLeft = styled.div`
   }
 `;
 
+export const AuthorDropdown = styled.div`
+  background-color: rgba(0, 0, 0, 0.75);
+  display: none;
+  gap: 10px;
+  width: 181px;
+  flex-direction: column;
+  position: absolute;
+  top: calc(100% + 20px);
+  right: 0;
+  padding: 15px 10px;
+  &::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    width: 100%;
+    height: 20px;
+    background-color: transparent;
+    :hover {
+      & {
+        display: flex;
+      }
+    }
+  }
+`;
+
 export const Author = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
   img {
     width: 32px;
     height: auto;
     object-fit: cover;
+  }
+
+  .dropdown-icon {
+    font-size: 1.2rem;
+  }
+
+  .arrow {
+    border: 5px solid transparent;
+    border-bottom-color: ${COLOR.white[0]};
+    height: 0;
+    position: absolute;
+    bottom: -15px;
+    right: 50%;
+    z-index: 100;
+    display: none;
+  }
+
+  &:hover,
+  .arrow:hover {
+    .dropdown-icon {
+      transform: rotate(180deg);
+      transition: transform 150ms ease-in-out;
+    }
+
+    .arrow {
+      display: block;
+    }
+
+    ${AuthorDropdown} {
+      display: flex;
+    }
+  }
+`;
+
+export const AccountItem = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  span {
+    color: ${COLOR.white[0]};
+    font-size: 13px;
+  }
+  &:hover {
+    span {
+      text-decoration: underline;
+    }
+  }
+`;
+
+export const AccountAva = styled.img`
+  width: 32px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+`;
+
+export const DropdownButton = styled.button`
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: ${COLOR.white[0]};
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 15px;
+  cursor: pointer;
+  svg {
+    width: 32px;
+    font-size: 1.2rem;
+  }
+  span {
+    font-size: 12px;
+  }
+
+  &:hover {
+    span {
+      text-decoration: underline;
+    }
   }
 `;

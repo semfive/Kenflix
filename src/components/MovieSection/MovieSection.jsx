@@ -70,7 +70,6 @@ const MovieSection = ({ title, setOpen, method }) => {
     setHasPrev(distance < 0);
     setHasNext(viewed + totalInViewport < 5);
   }, [sliderContainerRef, distance]);
-  // console.log(method);
 
   useEffect(() => {
     const fetchMovies = async () => {

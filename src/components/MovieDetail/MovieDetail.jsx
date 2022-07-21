@@ -14,14 +14,15 @@ import {
 import { base_img_url } from '../../api/request';
 import Button from '../Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlus, faPlay, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faCirclePlus, faPlay, faThumbsUp, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useRef, useState } from 'react';
 import useClickOutside from '../../hooks/useClickOutside';
 import YouTube from 'react-youtube';
 import { useSelector } from 'react-redux';
 
-const MovieDetail = ({ setOpen }) => {
+const MovieDetail = ({ setOpen, open }) => {
   const detailRef = useRef();
+  const overlayRef = useRef();
 
   const [play, setPlay] = useState(false);
   const [player, setPlayer] = useState();
@@ -34,16 +35,20 @@ const MovieDetail = ({ setOpen }) => {
     playerVars: {
       controls: 0,
       autoplay: 0,
-      end: 20,
+      end: 30,
       modestbranding: 1,
       rel: 0
     }
   });
 
   useClickOutside(detailRef, () => {
+    closeDetail();
+  });
+
+  const closeDetail = () => {
     setPlay(false);
     setOpen(false);
-  });
+  };
 
   const playTrailer = () => {
     setPlay(true);
@@ -67,8 +72,8 @@ const MovieDetail = ({ setOpen }) => {
           opts={opts}
           onReady={(event) => setPlayer(event.target)}
           onEnd={(event) => {
-            console.log(event);
             event.target.seekTo(0);
+            event.target.pauseVideo();
             setClick(true);
             setPlay(false);
           }}
@@ -79,9 +84,10 @@ const MovieDetail = ({ setOpen }) => {
 
   return (
     <>
-      <Overlay>
-        <Wrapper ref={detailRef}>
+      <Overlay ref={overlayRef}>
+        <Wrapper ref={detailRef} open={open}>
           <Header play={play}>
+            <FontAwesomeIcon onClick={closeDetail} className="close-icon" icon={faXmark} />
             <Image src={`${base_img_url}${movie.backdrop_path}`} />
             {videos && renderTrailer()}
             <BriefHeader>

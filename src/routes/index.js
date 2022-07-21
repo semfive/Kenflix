@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { HomePage, Login, PlanPage, SignUp, WelcomePage } from '../pages';
+import AccountPage from '../pages/AccountPage/AccountPage';
 import PrivateRoute from './privateRoute';
 import PublicRoute from './publicRoute';
 
@@ -14,8 +15,9 @@ const PageRouting = () => {
         <Route path="/signup" element={<SignUp />} />
       </Route>
       <Route element={<PrivateRoute />}>
+        <Route path="/accounts" element={<AccountPage />} />
         <Route path="/plan" element={<PlanPage />} />
-        <Route path="/homepage" element={<HomePage />} />
+        <Route path="/homepage/:id" element={<HomePage />} />
       </Route>
     </Routes>
   );

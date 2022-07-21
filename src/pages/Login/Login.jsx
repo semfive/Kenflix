@@ -42,7 +42,7 @@ const Login = () => {
       console.log(res);
       setToken(res.user.accessToken);
       localStorage.setItem('token', res.user.accessToken);
-      navigate('/homepage');
+      navigate('/accounts');
     } catch (err) {
       console.error(err);
       alert(err.message);
@@ -62,7 +62,7 @@ const Login = () => {
         // ...
         setToken(user.accessToken);
         localStorage.setItem('token', user.accessToken);
-        navigate('/homepage');
+        navigate('/accounts');
       })
       .catch((error) => {
         // Handle Errors here.
@@ -98,7 +98,7 @@ const Login = () => {
                 .then(function (data) {
                   // Google account successfully linked to the existing Firebase user.
                   console.log(data);
-                  navigate('/hom');
+                  navigate('/accounts');
                 });
               return;
             }

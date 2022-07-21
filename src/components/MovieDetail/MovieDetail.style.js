@@ -4,8 +4,17 @@ import { COLOR } from '../../utils/color';
 const fadeIn = keyframes`
   from{
     opacity: 0;
-
   }to{
+    opacity: 1;
+  }
+`;
+
+const appearIn = keyframes`
+from{
+  transform: scale(0.7);
+    opacity: 0;
+  }to{
+    transform: scale(1);
     opacity: 1;
   }
 `;
@@ -20,8 +29,11 @@ export const Overlay = styled.div`
   right: 0;
   left: 0;
   bottom: 0;
+  min-height: 100vh;
   z-index: 999;
   display: flex;
+  overflow-y: scroll;
+  overflow-x: hidden;
   @media (max-width: 992px) {
     padding: 2vw 16vw;
   }
@@ -37,17 +49,19 @@ export const Wrapper = styled.section`
   background-color: #000;
   width: 100%;
   border-radius: 8px;
+  top: 2vw;
   background-color: #181818;
-  /* opacity: 0; */
+  height: 1000px;
+  animation: ${({ open }) => open && appearIn} 1 ease-in-out 500ms forwards;
+  scroll-behavior: smooth;
   overflow: hidden;
-  animation: ${({ play }) => play && fadeIn} 1 ease-in-out forwards;
 `;
 
 export const Header = styled.section`
   width: 100%;
   position: relative;
   overflow: hidden;
-
+  animation: ${({ play }) => !play && fadeIn} 1 ease-in-out 500ms forwards;
   #video-ytb {
     display: ${({ play }) => (play ? 'block' : 'none')};
     width: 100%;
@@ -55,6 +69,19 @@ export const Header = styled.section`
     position: absolute;
     top: 0;
     pointer-events: none;
+  }
+
+  .close-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #181818;
+    border-radius: 50%;
+    height: 24px;
+    padding: 5px;
+    width: 24px;
+    color: ${COLOR.white[0]};
+    cursor: pointer;
   }
 `;
 
@@ -135,14 +162,14 @@ export const ButtonList = styled.div`
 export const DetailBody = styled.section`
   display: flex;
   flex-direction: column;
-  padding: 0 1.5em;
+  padding: 0 3em;
 `;
 
 export const DetailPreview = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: 60% 35%;
-  gap: 5%;
+  grid-template-columns: calc(100% * 2 / 3) calc(100% / 3);
+  gap: 2em;
   @media (max-width: 768px) {
     grid-template-columns: 55% 40%;
   }

@@ -14,9 +14,9 @@ const scaleDown = keyframes`
 export const Wrapper = styled.div`
   width: 100%;
   background-color: #000;
+  min-height: 100vh;
   position: relative;
   overflow: hidden;
-
   .scaleDownTitle {
     transform-origin: left bottom;
     transform: scale(0.8) translate3d(0px, 64px, 0px);

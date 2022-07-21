@@ -19,14 +19,17 @@ import { Button } from '../../components';
 import MovieDetail from '../../components/MovieDetail/MovieDetail';
 import YouTube from 'react-youtube';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTrailer } from '../../redux/index';
+import { addVideos, setMovie, setTrailer } from '../../redux/index';
+import Loader from './Loader/Loader';
 
 const HomePage = () => {
   const [trailerVideo, setTrailerVideo] = useState();
   const [open, setOpen] = useState(false);
   const [play, setPlay] = useState(false);
   const [player, setPlayer] = useState();
+  const [loading, setLoading] = useState(true);
   const [buttonClick, setClick] = useState(true);
+
   const { fetchTopRated, fetchPopular, fetchUpcoming } = fetchData;
   const trailer = useSelector((state) => state.trailer);
   const dispatch = useDispatch();
@@ -35,7 +38,7 @@ const HomePage = () => {
     playerVars: {
       controls: 0,
       autoplay: 0,
-      end: 20,
+      end: 30,
       modestbranding: 1
     }
   });
@@ -87,7 +90,6 @@ const HomePage = () => {
           opts={opts}
           onReady={(event) => setPlayer(event.target)}
           onEnd={(event) => {
-            console.log(event);
             event.target.seekTo(0);
             event.target.pauseVideo();
             setClick(true);
@@ -98,6 +100,19 @@ const HomePage = () => {
         />
       );
     }
+  };
+
+  const handleTrailerDetail = async () => {
+    const detailRes = await axios.get(`${BASE_URL}/movie/${trailer.id}?api_key=${API_KEY}`);
+    dispatch(setMovie(detailRes.data));
+    const videoRes = await axios.get(`${BASE_URL}/movie/${detailRes.data.id}/videos`, {
+      params: {
+        api_key: API_KEY,
+        append_to_response: 'videos'
+      }
+    });
+    dispatch(addVideos(videoRes.data.results));
+    setOpen(true);
   };
 
   useEffect(() => {
@@ -111,6 +126,7 @@ const HomePage = () => {
           }
         });
         dispatch(setTrailer(res.data));
+        console.log(res);
       } catch (error) {
         console.log(error);
       }
@@ -124,7 +140,8 @@ const HomePage = () => {
             append_to_response: 'videos'
           }
         });
-        setTrailerVideo(res.data);
+        await setTrailerVideo(res.data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -134,40 +151,49 @@ const HomePage = () => {
   }, []);
 
   return (
-    <Wrapper>
-      {open && <MovieDetail open={open} setOpen={setOpen} />}
-      <div>
-        <Navbar navItems={navItems} />
-      </div>
-      <Trailer play={play}>
-        <img src={`${base_img_url}${trailer?.backdrop_path}`} />
-        <div className="img-overlay"></div>
-        {trailerVideo && renderTrailer()}
-        <TrailerOverlay />
-        <TrailerContent>
-          <Title id="trailer-title">{trailer?.title}</Title>
-          <Description id="trailer-description">{trailer?.overview}</Description>
-          <TrailerAction>
-            <Button onClick={playTrailer}>
-              <FontAwesomeIcon icon={faPlay} /> Play
-            </Button>
-            <Button>
-              <FontAwesomeIcon icon={faCircleInfo} />
-              <span>More Info</span>
-            </Button>
-          </TrailerAction>
-        </TrailerContent>
-      </Trailer>
-      <MovieListContainer>
-        <MovieSection title={'Trending Now'} method={fetchPopular} setOpen={setOpen} />
-        <MovieSection
-          title={'Exciting TV Action & Adventure'}
-          method={fetchTopRated}
-          setOpen={setOpen}
-        />
-        <MovieSection title={'Upcoming'} method={fetchUpcoming} setOpen={setOpen} />
-      </MovieListContainer>
-    </Wrapper>
+    <>
+      <Wrapper>
+        {open && <MovieDetail open={open} setOpen={setOpen} />}
+
+        <div>
+          <Navbar navItems={navItems} />
+        </div>
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            <Trailer play={play}>
+              <img src={`${base_img_url}${trailer?.backdrop_path}`} />
+              <div className="img-overlay"></div>
+              {trailerVideo && renderTrailer()}
+              <TrailerOverlay />
+              <TrailerContent>
+                <Title id="trailer-title">{trailer?.title}</Title>
+                <Description id="trailer-description">{trailer?.overview}</Description>
+                <TrailerAction>
+                  <Button onClick={playTrailer}>
+                    <FontAwesomeIcon icon={faPlay} /> Play
+                  </Button>
+                  <Button onClick={handleTrailerDetail}>
+                    <FontAwesomeIcon icon={faCircleInfo} />
+                    <span>More Info</span>
+                  </Button>
+                </TrailerAction>
+              </TrailerContent>
+            </Trailer>
+            <MovieListContainer>
+              <MovieSection title={'Trending Now'} method={fetchPopular} setOpen={setOpen} />
+              <MovieSection
+                title={'Exciting TV Action & Adventure'}
+                method={fetchTopRated}
+                setOpen={setOpen}
+              />
+              <MovieSection title={'Upcoming'} method={fetchUpcoming} setOpen={setOpen} />
+            </MovieListContainer>
+          </>
+        )}
+      </Wrapper>
+    </>
   );
 };
 
