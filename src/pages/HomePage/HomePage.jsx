@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import Navbar from '../../components/Navbar/Navbar';
 import {
   Description,
   MovieListContainer,
@@ -44,29 +43,6 @@ const HomePage = () => {
       modestbranding: 1
     }
   });
-
-  const navItems = [
-    {
-      name: 'Home',
-      value: 'Home'
-    },
-    {
-      name: 'TV Shows',
-      value: 'TV Shows'
-    },
-    {
-      name: 'Movies',
-      value: 'Movies'
-    },
-    {
-      name: 'New',
-      value: 'New'
-    },
-    {
-      name: 'My List',
-      value: 'My List'
-    }
-  ];
 
   const playTrailer = () => {
     setPlay(true);
@@ -161,9 +137,6 @@ const HomePage = () => {
       <Wrapper scaleHeight={scaleHeight} ref={wrapperRef}>
         {open && <MovieDetail open={open} setOpen={setOpen} />}
 
-        <div>
-          <Navbar navItems={navItems} />
-        </div>
         {loading ? (
           <Loader />
         ) : (

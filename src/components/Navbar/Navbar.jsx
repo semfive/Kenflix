@@ -27,22 +27,24 @@ import { useAuth } from '../../hooks';
 import { API_KEY, BASE_URL } from '../../api/request';
 import jwtDecode from 'jwt-decode';
 import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
-import { addAccounts } from '../../redux';
+import { addAccounts, setSearch } from '../../redux';
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = ({ navItems, button }) => {
   const [navBG, setNavBG] = useState(false);
   const [openBox, setOpenBox] = useState(false);
-  const [search, setSearch] = useState('');
 
   const accounts = useSelector((state) => state.accounts);
+  const search = useSelector((state) => state.search);
 
   const searchRef = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const currentUrl = useLocation();
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
@@ -67,15 +69,9 @@ const Navbar = ({ navItems, button }) => {
   };
 
   const handleSubmit = async (e) => {
-    if (e.code === 'Enter') {
-      const res = await axios.get(`${BASE_URL}/search/movie`, {
-        params: {
-          api_key: API_KEY,
-          query: search
-        }
-      });
-
-      console.log(res);
+    if (e.code === 'Enter' && currentUrl.pathname == `/homepage/${account.id}`) {
+      dispatch(setSearch(e.target.value));
+      navigate(`search=${search}`);
     }
   };
 
@@ -115,7 +111,9 @@ const Navbar = ({ navItems, button }) => {
               <div className="arrow"></div>
               <NavList>
                 {navItems?.map((navItem) => (
-                  <NavItem key={navItem.name}>{navItem.name}</NavItem>
+                  <NavItem key={navItem.name} onClick={navItem.navNavigate}>
+                    {navItem.name}
+                  </NavItem>
                 ))}
               </NavList>
             </div>
@@ -131,7 +129,7 @@ const Navbar = ({ navItems, button }) => {
                 ref={searchRef}
                 id="search-box"
                 placeholder="Title, people, genres"
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => dispatch(setSearch(e.target.value))}
                 onKeyDown={(e) => handleSubmit(e)}
               />
             </div>

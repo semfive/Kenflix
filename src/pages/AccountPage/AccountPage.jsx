@@ -24,7 +24,7 @@ import { addAccounts } from '../../redux';
 
 const AccountPage = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [has, setHas] = useState(4);
+  const [has] = useState(4);
   const [showForm, setShowForm] = useState(false);
   const [account, setAccount] = useState(null);
 
@@ -62,7 +62,6 @@ const AccountPage = () => {
         setShowForm={setShowForm}
         showForm={showForm}
         setIsEditing={setIsEditing}
-        setHas={setHas}
         account={account}
         setAccount={setAccount}
       />

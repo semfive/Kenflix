@@ -33,7 +33,7 @@ import jwt_decode from 'jwt-decode';
 import { useDispatch } from 'react-redux';
 import { addAccount, deleteAccount, editAccount } from '../../../redux';
 
-const AccountForm = ({ setShowForm, showForm, setIsEditing, setHas, account, setAccount }) => {
+const AccountForm = ({ setShowForm, showForm, setIsEditing, account, setAccount }) => {
   const [showAvaList, setShowAvaList] = useState(false);
   const [avatar, setAvatar] = useState();
   const [name, setName] = useState('');
@@ -55,7 +55,6 @@ const AccountForm = ({ setShowForm, showForm, setIsEditing, setHas, account, set
     });
     setAvatar('');
     setName('');
-    setHas((prev) => prev + 1);
     setAccount(null);
     e.target.style.pointerEvents = 'auto';
     setIsEditing(false);
@@ -67,7 +66,6 @@ const AccountForm = ({ setShowForm, showForm, setIsEditing, setHas, account, set
     dispatch(deleteAccount(id));
     setAvatar('');
     setName('');
-    setHas((prev) => prev - 1);
     setAccount(null);
     setIsEditing(false);
     setShowForm(false);
@@ -88,7 +86,6 @@ const AccountForm = ({ setShowForm, showForm, setIsEditing, setHas, account, set
     );
     setAvatar('');
     setName('');
-    setHas((prev) => prev + 1);
     setAccount(null);
     e.target.style.pointerEvents = 'auto';
     setIsEditing(false);
