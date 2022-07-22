@@ -168,15 +168,16 @@ export const DetailBody = styled.section`
 export const DetailPreview = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: calc(100% * 2 / 3) calc(100% / 3);
+  grid-template-columns: 55% 40%;
+  justify-content: space-between;
   gap: 2em;
   @media (max-width: 768px) {
-    grid-template-columns: 55% 40%;
+    grid-template-columns: 50% 40%;
   }
   @media (max-width: 575px) {
     grid-template-columns: 1fr;
     .right-overview {
-      width: 60%;
+      width: 100%;
     }
   }
 `;
@@ -222,5 +223,6 @@ export const PreviewRight = styled.div`
   .preview-text {
     color: ${COLOR.white[0]};
     font-size: 12px;
+    word-wrap: break-word;
   }
 `;

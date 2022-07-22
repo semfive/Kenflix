@@ -3,9 +3,10 @@ import { COLOR } from '../../utils/color';
 
 export const Wrapper = styled.div`
   padding: 70px 45px;
-  background-color: ${({ bg }) => bg || COLOR.primary3};
+  background-color: ${({ bgColor }) => bgColor || COLOR.primary3};
   display: flex;
   flex-direction: column;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 export const Container = styled.div`

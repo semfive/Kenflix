@@ -3,9 +3,8 @@ import { useAuth } from '../hooks';
 
 const PublicRoute = () => {
   const { token } = useAuth();
-
   if (token) {
-    return <Navigate to={'/homepage'} replace />;
+    return <Navigate to={'/accounts'} replace />;
   }
   return <Outlet />;
 };

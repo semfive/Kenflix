@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 import {
   Description,
@@ -15,7 +15,7 @@ import { API_KEY, base_img_url, BASE_URL, fetchData } from '../../api/request';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo, faPlay } from '@fortawesome/free-solid-svg-icons';
 import MovieSection from '../../components/MovieSection/MovieSection';
-import { Button } from '../../components';
+import { Button, Footer } from '../../components';
 import MovieDetail from '../../components/MovieDetail/MovieDetail';
 import YouTube from 'react-youtube';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,10 +29,12 @@ const HomePage = () => {
   const [player, setPlayer] = useState();
   const [loading, setLoading] = useState(true);
   const [buttonClick, setClick] = useState(true);
+  const [scaleHeight, setScaleHeight] = useState(0);
 
   const { fetchTopRated, fetchPopular, fetchUpcoming } = fetchData;
   const trailer = useSelector((state) => state.trailer);
   const dispatch = useDispatch();
+  const wrapperRef = useRef();
 
   const [opts] = useState({
     playerVars: {
@@ -68,8 +70,11 @@ const HomePage = () => {
 
   const playTrailer = () => {
     setPlay(true);
+    setScaleHeight(document.getElementById('trailer-description')?.clientHeight);
+    console.log(wrapperRef.current.offsetWidth);
     if (buttonClick && player) {
       player.playVideo();
+      console.log(document.getElementById('trailer-description').clientHeight);
       document.getElementById('trailer-title').classList.add('scaleDownTitle');
       document.getElementById('trailer-description').classList.add('scaleDownDescription');
       setClick((prev) => !prev);
@@ -146,13 +151,14 @@ const HomePage = () => {
         console.log(error);
       }
     };
+
     fetchTrailer();
     fetchVideos();
   }, []);
 
   return (
     <>
-      <Wrapper>
+      <Wrapper scaleHeight={scaleHeight} ref={wrapperRef}>
         {open && <MovieDetail open={open} setOpen={setOpen} />}
 
         <div>
@@ -192,6 +198,8 @@ const HomePage = () => {
             </MovieListContainer>
           </>
         )}
+
+        <Footer />
       </Wrapper>
     </>
   );

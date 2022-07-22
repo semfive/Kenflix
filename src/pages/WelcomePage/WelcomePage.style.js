@@ -52,7 +52,7 @@ export const Wrapper = styled.div`
   background-color: ${COLOR.primary2[1]};
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
   button {
     background-color: ${COLOR.red[0]};
     padding: 10px 1vw;

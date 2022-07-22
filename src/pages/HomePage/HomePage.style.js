@@ -6,7 +6,6 @@ const scaleDown = keyframes`
   }
   to{
     opacity: 0;
-    transform: translateY(38.4px);
     z-index: -1;
   }
 `;
@@ -19,11 +18,10 @@ export const Wrapper = styled.div`
   overflow: hidden;
   .scaleDownTitle {
     transform-origin: left bottom;
-    transform: scale(0.8) translate3d(0px, 64px, 0px);
+    transform: scale(0.8)
+      translate3d(0px, ${({ scaleHeight }) => `${scaleHeight}px` || '64px'}, 0px);
     transition-duration: 1300ms;
     transition-delay: 5000ms;
-    @media (max-width: 992px) {
-    }
   }
 
   .scaleDownDescription {
@@ -98,7 +96,6 @@ export const TrailerContent = styled.div`
   }
   @media (max-width: 575px) {
     top: 40%;
-    width: 45%;
   }
 `;
 
@@ -117,11 +114,27 @@ export const Description = styled.div`
   max-width: inherit;
   text-align: left;
   font-size: 1.2vw;
+  line-height: 1.2vw;
   font-weight: 400;
   margin: 1.2vw 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
 
   @media (max-width: 768px) {
     font-size: 1vw;
+  }
+  @media (max-width: 575px) {
+    width: 80%;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+
+    /* max-height: 4.8vw; */
+    overflow: hidden;
   }
 `;
 
@@ -133,6 +146,9 @@ export const TrailerAction = styled.div`
     border: none;
     width: unset;
     padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
     svg {
       margin-right: 5px;
     }
@@ -150,9 +166,14 @@ export const TrailerAction = styled.div`
     }
 
     @media (max-width: 992px) {
+      font-size: 1rem;
       padding: 0.5rem 1.5rem;
     }
     @media (max-width: 768px) {
+      padding: 0.4rem 0.7rem;
+    }
+    @media (max-width: 575) {
+      font-size: 0.8rem;
       padding: 0.4rem 1rem;
     }
   }
@@ -163,4 +184,5 @@ export const MovieListContainer = styled.div`
   flex-direction: column;
   gap: 35px;
   z-index: 10;
+  margin-bottom: 80px;
 `;

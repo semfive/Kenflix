@@ -70,6 +70,7 @@ export const NavRight = styled.div`
     width: 50px;
     height: auto;
     object-fit: cover;
+    cursor: pointer;
   }
   #nav-dropdown {
     position: relative;
@@ -85,16 +86,17 @@ export const NavRight = styled.div`
         opacity: 1;
       }
     }
-
-    .arrow {
-      border: 7px solid transparent;
-      border-bottom-color: ${COLOR.white[0]};
-      height: 0;
-      opacity: 0;
-      position: absolute;
-      top: 100%;
-      right: 0;
-      z-index: 100;
+    @media (max-width: 768px) {
+      .arrow {
+        border: 7px solid transparent;
+        border-bottom-color: ${COLOR.white[0]};
+        height: 0;
+        opacity: 0;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        z-index: 100;
+      }
     }
   }
   #nav-dropdown-btn {
@@ -111,6 +113,7 @@ export const NavList = styled.ul`
   display: flex;
   margin-left: 15px;
   gap: 15px;
+
   @media (max-width: 768px) {
     flex-direction: column;
     gap: 20px;
@@ -131,6 +134,19 @@ export const NavList = styled.ul`
     li {
       /* padding: 5px 10px; */
       word-break: keep-all;
+    }
+    &::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      width: 100%;
+      height: 20px;
+      background-color: transparent;
+      :hover {
+        & {
+          display: flex;
+        }
+      }
     }
   }
 `;

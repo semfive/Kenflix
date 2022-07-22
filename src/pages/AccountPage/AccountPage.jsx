@@ -24,7 +24,7 @@ import { addAccounts } from '../../redux';
 
 const AccountPage = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [has, setHas] = useState(5);
+  const [has, setHas] = useState(4);
   const [showForm, setShowForm] = useState(false);
   const [account, setAccount] = useState(null);
 
@@ -50,7 +50,7 @@ const AccountPage = () => {
       await dispatch(addAccounts(accountsArray));
     };
     getAccounts();
-  }, []);
+  }, [accounts]);
 
   const renderForm = (item) => {};
   return (

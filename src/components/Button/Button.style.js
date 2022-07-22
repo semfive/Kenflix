@@ -13,7 +13,7 @@ const loader = keyframes`
 export const Wrapper = styled.button`
   border: none;
   outline: none;
-  padding: ${({ pd }) => pd || '15px 10px'};
+  padding: ${({ pd }) => pd || '5px 10px'};
   border-radius: 8px;
   cursor: pointer;
   background-color: ${({ bg }) => bg || 'transparent'};

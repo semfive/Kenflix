@@ -47,7 +47,7 @@ const Navbar = ({ navItems, button }) => {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  const { token } = useAuth();
+  const { token, setToken } = useAuth();
 
   const account = JSON.parse(localStorage.getItem('account'));
 
@@ -79,6 +79,12 @@ const Navbar = ({ navItems, button }) => {
     }
   };
 
+  const handleSignOut = async () => {
+    await localStorage.clear();
+    await setToken();
+    navigate('/');
+  };
+
   useEffect(() => {
     const getAccounts = async () => {
       const decode = jwtDecode(token);
@@ -99,7 +105,7 @@ const Navbar = ({ navItems, button }) => {
   return (
     <Wrapper navBG={navBG}>
       <NavRight>
-        <div>
+        <div onClick={() => navigate('/accounts')}>
           <img src={logo} alt="site logo" />
         </div>
         {token && (
@@ -153,11 +159,11 @@ const Navbar = ({ navItems, button }) => {
                   <FontAwesomeIcon icon={faPen} />
                   <span>Manage Profiles</span>
                 </DropdownButton>
-                <DropdownButton>
+                <DropdownButton onClick={() => navigate('/YourAccount')}>
                   <FontAwesomeIcon icon={faUser} />
                   <span>Account</span>
                 </DropdownButton>
-                <DropdownButton style={{ border: 'none' }}>
+                <DropdownButton style={{ border: 'none' }} onClick={handleSignOut}>
                   <span>sign out of Netflix</span>
                 </DropdownButton>
               </AuthorDropdown>

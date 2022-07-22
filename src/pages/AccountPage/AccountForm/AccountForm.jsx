@@ -107,8 +107,8 @@ const AccountForm = ({ setShowForm, showForm, setIsEditing, setHas, account, set
               <Avatar
                 key={item}
                 onClick={() => {
-                  setShowAvaList(false);
                   setAvatar(item);
+                  setShowAvaList(false);
                 }}>
                 <img src={item} />
               </Avatar>

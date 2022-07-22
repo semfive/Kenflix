@@ -119,9 +119,6 @@ const MovieDetail = ({ setOpen, open }) => {
               <PreviewRight>
                 <ul className="right-overview">
                   <li>
-                    <span className="rightTitle">Cast:</span>{' '}
-                  </li>
-                  <li>
                     <span className="rightTitle">Genres:</span>
                     {movie.genres.map((item, index) => {
                       if (index === movie.genres.length - 1) {

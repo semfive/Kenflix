@@ -84,7 +84,6 @@ export const Input = styled.input`
 `;
 export const AvatarList = styled.div`
   list-style: none;
-  /* background-color: rgba(0, 0, 0, 0.5); */
   display: ${({ show }) => (show ? 'grid' : 'none')};
   grid-template-columns: repeat(2, 1fr);
   gap: 5px;

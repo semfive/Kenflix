@@ -2,9 +2,9 @@ import React from 'react';
 import { footerData } from '../../data';
 import { Container, FooterLinkItem, FooterLinks, Link, Wrapper } from './Footer.style';
 
-const Footer = () => {
+const Footer = ({ bgColor }) => {
   return (
-    <Wrapper>
+    <Wrapper bgColor={bgColor}>
       <Container>
         <div style={{ marginBottom: '1.6rem' }}>
           <Link href="#" style={{ fontSize: '1rem' }}>

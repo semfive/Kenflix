@@ -57,7 +57,7 @@ export const Title = styled.h3`
 export const AccountList = styled.ul`
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, minmax(84px, 1fr));
   gap: 2vw;
 `;
 
